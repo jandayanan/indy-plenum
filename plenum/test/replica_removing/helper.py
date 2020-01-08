@@ -67,8 +67,8 @@ def do_test_replica_removing_with_backup_degraded(looper,
                                              txnPoolNodeSet,
                                              sdk_pool_handle,
                                              sdk_wallet_client,
-                                             num_reqs=10,
-                                             num_batches=5)
+                                             num_reqs=30,
+                                             num_batches=15)
 
         # check that replicas were removed
         def check_replica_removed_on_all_nodes(inst_id=instance_to_remove):
@@ -84,7 +84,7 @@ def do_test_replica_removing_with_backup_degraded(looper,
     for node in txnPoolNodeSet:
         node.view_changer.on_master_degradation()
     waitForViewChange(looper, txnPoolNodeSet, expectedViewNo=view_no + 1,
-                      customTimeout=2 * tconf.VIEW_CHANGE_TIMEOUT)
+                      customTimeout=2 * tconf.NEW_VIEW_TIMEOUT)
     ensureElectionsDone(looper=looper, nodes=txnPoolNodeSet)
     # check that all replicas were restored
     assert all(start_replicas_count == node.replicas.num_replicas
